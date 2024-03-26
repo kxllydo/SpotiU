@@ -36,13 +36,15 @@ def home():
    # recommendations = recplay.getSongs(sp) < this returns ONLY the song names from the recommended
     recommendations = recplay.getSongs(sp) # < this returns the entire dictionary info about the recommended songs
    # createRecommendationPlaylist = recplay.makePlaylist(sp)
+    hi = recplay.makeRecommendationPlaylist(sp, 5)
     #filledPlaylist = recplay.fillRecPlaylist(sp)
     #bruh = recplay.getTop15Artists(sp)
     #id = recplay.getTop2ArtistIDs(bruh)
-    playlistid = playfilter.getArtistTopTracksID(sp)
+    playlistid = playfilter.artistTopTrackIDs(sp)
     #userplay = playfilter.userPlaylistsTrackIds(sp)
     track = playfilter.userPlaylistsTrackIds(sp)
-    return track
+    recent = playfilter.recentlyPlayedTrackIDs(sp)
+    return hi
     #id = recplay.getRecPlaylistID(filledPlaylist) <test for the id
     #ID = recplay.getUserProfile(sp)
     #return (createRecommendationPlaylist, filledPlaylist)
@@ -68,7 +70,7 @@ def create_spotify_oauth():
         client_secret = "e7ee05789cbd497cb1f571647c411453",
         redirect_uri = url_for('redirect_page', _external= True),
         #SCOPE COULD BE ANYTHING WE ARE ADDING!!!!
-        scope = 'user-library-read user-top-read playlist-modify-public playlist-modify-private user-read-private user-read-email playlist-read-private'
+        scope = 'user-library-read user-top-read playlist-modify-public playlist-modify-private user-read-private user-read-email playlist-read-private user-read-recently-played'
         )
 
 app.run(debug = True)

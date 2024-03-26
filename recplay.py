@@ -42,16 +42,16 @@ def getTop3Genres(top15Artists):
 
     return finalGenres
 
-def makeRecommendationPlaylist(sp):
+def makeRecommendationPlaylist(sp, num):
     top15Artists = getTop15Artists(sp)
     artistSeed = getTop2ArtistIDs(top15Artists)
     genreSeed = getTop3Genres(top15Artists)
 
-    return sp.recommendations(seed_artists=artistSeed, seed_genres=genreSeed, limit=5, country='US')
+    return sp.recommendations(seed_artists=artistSeed, seed_genres=genreSeed, limit=num, country='US')
 
 def getSongs(sp):
     final = []
-    rec = makeRecommendationPlaylist(sp)["tracks"]
+    rec = makeRecommendationPlaylist(sp, 5)["tracks"]
     for song in rec:
         final.append(song["name"])
     
@@ -59,7 +59,7 @@ def getSongs(sp):
 
 def getURISongs(sp):
     final = []
-    URI = makeRecommendationPlaylist(sp)["tracks"]
+    URI = makeRecommendationPlaylist(sp, 5)["tracks"]
     for song in URI:
         final.append(song["uri"])
 
