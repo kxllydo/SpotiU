@@ -63,7 +63,7 @@ def getPlaylistTrackIDs(sp, playlistID):
 
     trackIDs = []
     for track in tracks: 
-        trackIDs.append(track["id"])
+        trackIDs.append(track["uri"])
     return trackIDs
 
 
@@ -75,12 +75,12 @@ def userPlaylistsTrackIds(sp):
     playlists = sp.current_user_playlists(limit=10, offset=0)['items']  #gets the user's 10 recent playlists
 
     #go into items, then iterate through the list of dictionary. then go into each dictinary and get the id.
-    trackIDs = []
+    trackURIs = []
     for playlist in playlists:
-        trackIDs.append(getPlaylistTrackIDs(sp, playlist['id']))
+        trackURIs.append(getPlaylistTrackIDs(sp, playlist['id']))
     final = []
-    for ids in trackIDs:
-        for playlistID in ids:
+    for uri in trackURIs:
+        for playlistID in uri:
             final.append(playlistID)
         
     return final 
@@ -102,14 +102,4 @@ def userPlaylistsTrackIds(sp):
 
 #     for id in recTrackIds:
 #         if (id in playlistTrackIds) or (id in recentTrackIds) or (id in artistTrackIds):
-
-
-
-
-
-    
-
-
-
-    
-    
+#             recplay.deleteTrack(sp, recPlaylistId, )
