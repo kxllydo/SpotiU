@@ -78,7 +78,7 @@ def deleteTrack(sp, recommendationPlaylistID, uri):
 
 def playlistLength(sp, recommendationPlaylistID):
     items = sp.playlist(playlist_id = recommendationPlaylistID)['tracks']['items']
-    return str(len(items))
+    return len(items)
 
 
 #making the playlist!!!
@@ -97,7 +97,7 @@ def getRecPlaylistID(sp):
 
 def fillRecPlaylist(sp):
     playlistID = getRecPlaylistID(sp)
-    songURIList = getRecommendations(sp)
+    songURIList = getRecommendations(sp, 5)
     filledPlaylist = sp.playlist_add_items(playlist_id=playlistID, items=songURIList, position=None)
     return filledPlaylist
 

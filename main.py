@@ -35,15 +35,17 @@ def home():
     sp = spotipy.Spotify(auth=token_info['access_token'])
    # recommendations = recplay.getSongs(sp) < this returns ONLY the song names from the recommended
    # recommendations = recplay.getSongs(sp) # < this returns the entire dictionary info about the recommended songs
-    # createRecommendationPlaylist = recplay.makePlaylist(sp)
-    # filledPlaylist = recplay.fillRecPlaylist(sp)
-    recTrackURIs = playfilter.getPlaylistTrackURIs(sp, recplay.getRecPlaylistID(sp))
+    createRecommendationPlaylist = recplay.makePlaylist(sp)
+    filledPlaylist = recplay.fillRecPlaylist(sp)
+    #recTrackURIs = playfilter.getPlaylistTrackURIs(sp, recplay.getRecPlaylistID(sp))
 
-    #hi = playfilter.filter(sp, recplay.getRecPlaylistID(sp))
-    bruh = recplay.getRecommendations(sp, 5)
+    #playfilter.filter(sp, recplay.getRecPlaylistID(sp))
+    #bruh = recplay.getRecommendations(sp, 5)\
+    id = recplay.getRecPlaylistID(sp)
 
-    return bruh #recplay.deleteTrack(sp,recplay.getRecPlaylistID(sp), "5kqIPrATaCc2LqxVWzQGbk" )
-    #id = recplay.getRecPlaylistID(filledPlaylist) <test for the id
+    hi = playfilter.filter(sp)
+    return hi #playfilter.filter(sp, recplay.getRecPlaylistID(sp))
+    #id = recplay.getRecPlaylistID(filledPlaylist)
     #ID = recplay.getUserProfile(sp)
     #return (createRecommendationPlaylist, filledPlaylist)
 

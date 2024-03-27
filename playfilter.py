@@ -14,27 +14,60 @@ def getTrackURI(track):
     topTrackURIs = [trk['uri'] for trk in track]
     return topTrackURIs
 
-def artistTopTrackURIs(sp):
+def getTopTrackURIs(sp, artistID, country="US", num=10):
+    topTracks = sp.artist_top_tracks(artist_id=artistID, country=country)['tracks']
+    trackURIs = []
+    for track in topTracks:
+        trackURIs.append(track['uri'])
+    if (num != 10):
+        while (len(trackURIs) > num):
+            trackURIs.pop()
+
+    return trackURIs 
+
+def topArtistTopTrackURIs(sp):
     """
     Gathers the top tracks from the user's top 15 artists and returns a list of all the song uris
     return: the top 15 artists' top songs
     """
-    top15Artists = recplay.getTop15Artists(sp)
-    artistIDs = recplay.getArtistIDs(top15Artists)
+    top15Artists = sp.current_user_top_artists(limit=15)['items']
+    artistIDs = recplay.getArtistIDs(top15Artists)  #move this function to this file
 
     tracks = [] #holds a list of dictionaries of tracks
     for artistID in artistIDs:
-        tracks.append(sp.artist_top_tracks(artist_id=artistID, country='US'))
-    trackURIs = []
-    for track in tracks: #goes into each dictionary
-        tr = track['tracks']
-        trackURIs.append(getTrackURI(tr)) #adds list of ids into a list
+        tracks.append(getTopTrackURIs(sp, artistID))
     final = []
-    for uris in trackURIs:
+    for uris in tracks: #trackURIs:
         for uri in uris:
             final.append(uri)
 
-    return final #returns a list of the top artists top tracks
+    return final 
+
+def recommendedArtistTopTrackURIs(sp, recPlayistID):
+    """
+    Gathers the top tracks from the artists in the generated recommendation playlist
+    return: recommended artist top track uris
+    """
+    items = sp.playlist_items(playlist_id=recPlayistID)['items']
+    artists = []
+    for item in items:
+        artists.append(item['track']['artists'])
+    artistIDs =[]
+    for artist in artists:
+        for info in artist:
+            artistIDs.append(info['id'])
+
+    topTracks = []
+    for ids in artistIDs:
+        topTracks.append(getTopTrackURIs(sp, ids, num=5))
+    
+    final = []
+    for uris in topTracks:
+        for uri in uris:
+            final.append(uri)
+
+    return final 
+
 
 def recentlyPlayedTrackURIs(sp):
     """
@@ -81,7 +114,7 @@ def userPlaylistsTrackURIs(sp):
     return final 
 
 
-def filterHelper(sp, recPlaylistId, playlistTrackURIs, recentTrackURIs, artistTrackURIs):
+def filterHelper(sp, recPlaylistId, playlistTrackURIs, recentTrackURIs, artistTrackURIs, recommendedArtistTrackURIs):
     """
     Will filter out songs from the generated recommendation playlist. It removes songs that are in the user's
     10 most recent playlists and top tracks from their top 15 artists
@@ -91,18 +124,16 @@ def filterHelper(sp, recPlaylistId, playlistTrackURIs, recentTrackURIs, artistTr
     recTrackURIs = getPlaylistTrackURIs(sp, recPlaylistId)
 
     for uri in recTrackURIs:
-        if (uri in playlistTrackURIs) or (uri in recentTrackURIs) or (uri in artistTrackURIs):
+        if (uri in playlistTrackURIs) or (uri in recentTrackURIs) or (uri in artistTrackURIs) or (uri in recommendedArtistTrackURIs):
             recplay.deleteTrack(sp, recPlaylistId, uri)
     
     if (recplay.playlistLength(sp, recPlaylistId) < 5):
         difference = 5 - recplay.playlistLength(sp, recPlaylistId)
         newTracks = recplay.getRecommendations(sp, difference)
         sp.playlist_add_items(recPlaylistId, newTracks)
-        filterHelper(sp, recPlaylistId, recTrackURIs, playlistTrackURIs, recentTrackURIs, artistTrackURIs)
+        filterHelper(sp, recPlaylistId, playlistTrackURIs, recentTrackURIs, artistTrackURIs, recommendedArtistTrackURIs)
     
-    return sp.playlist(recPlaylistId)
-
-def filter(sp, recommendationPlaylist):
+def filter(sp):
     """
     Will filter out songs from the generated recommendation playlist. It removes songs that are in the user's
     10 most recent playlists and top tracks from their top 15 artists
@@ -113,7 +144,8 @@ def filter(sp, recommendationPlaylist):
 
     playlistTrackURIs = userPlaylistsTrackURIs(sp)
     recentTrackURIs = recentlyPlayedTrackURIs(sp)
-    artistTrackURIs = artistTopTrackURIs(sp)
+    artistTrackURIs = topArtistTopTrackURIs(sp)
+    recommendedArtistTrackURIs = recommendedArtistTopTrackURIs (sp, recPlaylistId)
 
-    hi = filterHelper(sp, recPlaylistId, playlistTrackURIs, recentTrackURIs, artistTrackURIs)
-    return hi
+    filterHelper(sp, recPlaylistId, playlistTrackURIs, recentTrackURIs, artistTrackURIs, recommendedArtistTrackURIs)
+    return "sucess!"
