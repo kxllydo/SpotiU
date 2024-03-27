@@ -58,13 +58,31 @@ def getRecommendations(sp, num):
     return URIs
 
 
-def getSongs(sp):
-    final = []
-    rec = getRecommendations(sp, 5)["tracks"]
-    for song in rec:
-        final.append(song["name"])
+def getSongNames(sp, playlistID):
+    items = sp.playlist_items(playlistID)['items']
+    songNames = []
+    for item in items:
+        songNames.append(item['track']['name'])
+
+    return songNames
+
+def getArtistNames(sp, playlistID):
+    items = sp.playlist_items(playlistID)['items']
+    allArtist = []
+    for item in items:
+        allArtist.append(item['track']['artists'])
     
-    return final
+    artistNames = []
+    for artists in allArtist:
+        if (len(artists) > 1):
+            collabArtists = []
+            for artist in artists:
+                collabArtists.append(artist['name'])
+            artistNames.append(collabArtists)
+        else:
+            artistNames.append(artists[0]['name'])
+
+    return artistNames
 
 
 def getUserID(sp):

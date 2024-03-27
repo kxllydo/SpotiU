@@ -3,7 +3,7 @@ from requests import post, get
 import spotipy
 import time
 from spotipy.oauth2 import SpotifyOAuth
-import recplaylist
+import playlist
 
 
 
@@ -24,7 +24,7 @@ def topArtistTopTrackURIs(sp):
     return: the top 15 artists' top songs
     """
     top15Artists = sp.current_user_top_artists(limit=15)['items']
-    artistIDs = recplaylist.getArtistIDs(top15Artists)  #move this function to this file
+    artistIDs = playlist.getArtistIDs(top15Artists)  #move this function to this file
 
     tracks = [] #holds a list of dictionaries of tracks
     for artistID in artistIDs:
@@ -118,11 +118,11 @@ def filterHelper(sp, recPlaylistId, playlistTrackURIs, recentTrackURIs, artistTr
 
     for uri in recTrackURIs:
         if (uri in playlistTrackURIs) or (uri in recentTrackURIs) or (uri in artistTrackURIs) or (uri in recommendedArtistTrackURIs):
-            recplaylist.deleteTrack(sp, recPlaylistId, uri)
+            playlist.deleteTrack(sp, recPlaylistId, uri)
     
-    if (recplaylist.playlistLength(sp, recPlaylistId) < 10):
-        difference = 10 - recplaylist.playlistLength(sp, recPlaylistId)
-        newTracks = recplaylist.getRecommendations(sp, difference)
+    if (playlist.playlistLength(sp, recPlaylistId) < 10):
+        difference = 10 - playlist.playlistLength(sp, recPlaylistId)
+        newTracks = playlist.getRecommendations(sp, difference)
         sp.playlist_add_items(recPlaylistId, newTracks)
         filterHelper(sp, recPlaylistId, playlistTrackURIs, recentTrackURIs, artistTrackURIs, recommendedArtistTrackURIs)
     
@@ -133,7 +133,7 @@ def filter(sp):
     param recommendationPlaylist: the newly made recommendation playlist generated through recplay
     return: modifies the recommendation playlist so it contains never heard before new songs
     """
-    recPlaylistId = recplaylist.getRecPlaylistID(sp)
+    recPlaylistId = playlist.getRecPlaylistID(sp)
 
     playlistTrackURIs = userPlaylistsTrackURIs(sp)
     recentTrackURIs = recentlyPlayedTrackURIs(sp)
@@ -141,4 +141,11 @@ def filter(sp):
     recommendedArtistTrackURIs = recommendedArtistTopTrackURIs (sp, recPlaylistId)
 
     filterHelper(sp, recPlaylistId, playlistTrackURIs, recentTrackURIs, artistTrackURIs, recommendedArtistTrackURIs)
-    return "sucess!"
+
+    artistNames = playlist.getArtistNames(sp, recPlaylistId)
+    songNames = playlist.getSongNames(sp, recPlaylistId)
+
+    dict = {key: value for key, value in zip(songNames, artistNames)}
+    return dict
+
+

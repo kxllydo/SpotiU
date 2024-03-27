@@ -1,0 +1,25 @@
+header{
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    color: #ffffff;
+}
+
+p {
+    font-size: 18px;
+    text-align: center;
+    color: #ffffff;
+}
+.container {
+    width: 80%;
+    max-width: 600px;
+    margin: 20% auto; /* Adjust as needed */
+}
+
+body {
+    background-image: url('https://cdn.discordapp.com/attachments/816800243102122006/1222652299378294844/gradient.png?ex=6616feaf&is=660489af&hm=102d932f6cc2adb665a34d542609cfad53a4bcf8728d6f4f601f8681e780a244&');
+    background-size: cover;
+    margin: 0;
+
+
+}

@@ -1,9 +1,10 @@
 import spotipy
+import json
 import time
 from spotipy.oauth2 import SpotifyOAuth
-import recplay
-import playfilter
-from flask import Flask, request, url_for, session, redirect
+import playlist
+import filter
+from flask import Flask, request, url_for, session, redirect, render_template
 
 app = Flask(__name__)
 
@@ -33,10 +34,11 @@ def home():
         return redirect('/')
     
     sp = spotipy.Spotify(auth=token_info['access_token'])
-    createRecommendationPlaylist = recplay.makePlaylist(sp)
-    filledPlaylist = recplay.makeRecommendationPlaylist(sp)
-    hi = playfilter.filter(sp)
-    return hi 
+    createRecommendationPlaylist = playlist.makePlaylist(sp)
+    filledPlaylist = playlist.makeRecommendationPlaylist(sp)
+    hi = filter.filter(sp)
+
+    return render_template('home.html') 
 
 def get_token():
     token_info = session.get(TOKEN_INFO, None)
