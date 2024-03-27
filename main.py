@@ -36,14 +36,16 @@ def home():
    # recommendations = recplay.getSongs(sp) < this returns ONLY the song names from the recommended
     recommendations = recplay.getSongs(sp) # < this returns the entire dictionary info about the recommended songs
    # createRecommendationPlaylist = recplay.makePlaylist(sp)
-    hi = recplay.getRecommendations(sp, 5)
+    hi = playfilter.recentlyPlayedTrackURIs(sp)
     #filledPlaylist = recplay.fillRecPlaylist(sp)
     #bruh = recplay.getTop15Artists(sp)
     #id = recplay.getTop2ArtistIDs(bruh)
-    playlistid = playfilter.artistTopTrackIDs(sp)
+    playlistid = playfilter.artistTopTrackURIs(sp)
     #userplay = playfilter.userPlaylistsTrackIds(sp)
-    track = playfilter.userPlaylistsTrackIds(sp)
-    return track
+    track = playfilter.userPlaylistsTrackURIs(sp)
+
+    len = recplay.playlistLength(sp, '5x2CmzJDX4ilsqaZmnIZqO')
+    return len
     #id = recplay.getRecPlaylistID(filledPlaylist) <test for the id
     #ID = recplay.getUserProfile(sp)
     #return (createRecommendationPlaylist, filledPlaylist)

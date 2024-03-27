@@ -14,7 +14,7 @@ def getTrackID(track):
     topTrackIDs = [trk['id'] for trk in track]
     return topTrackIDs
 
-def artistTopTrackIDs(sp):
+def artistTopTrackURIs(sp):
     """
     Gathers the top tracks from the user's top 15 artists and returns a list of all the song ids
     return: the top 15 artists' top songs
@@ -38,21 +38,21 @@ def artistTopTrackIDs(sp):
 
 
 
-def recentlyPlayedTrackIDs(sp):
+def recentlyPlayedTrackURIs(sp):
     """
     Gets the 50 songs the user recently played
     return: 50 songs the user recently played
     """
     items = sp.current_user_recently_played()['items'] #list of all the tracks
-    recentlyPlayTrackID = []
+    recentlyPlayTrackURIs = []
     for item in items:
-        recentlyPlayTrackID.append(item['track']['id'])
-    return recentlyPlayTrackID
+        recentlyPlayTrackURIs.append(item['track']['uri'])
+    return recentlyPlayTrackURIs
 
 
 
 
-def getPlaylistTrackIDs(sp, playlistID):
+def getPlaylistTrackURIs(sp, playlistID):
     """
     Given a playlist, extract all the tracks from the playlist and return them
     pararm playlistID: the playlist id that we use to extract all the track ids from
@@ -61,13 +61,13 @@ def getPlaylistTrackIDs(sp, playlistID):
     items = sp.playlist_items(playlist_id=playlistID)['items']
     tracks =[item["track"] for item in items] # a list of all the tracks from 10 playlists
 
-    trackIDs = []
+    trackURIs = []
     for track in tracks: 
-        trackIDs.append(track["uri"])
-    return trackIDs
+        trackURIs.append(track["uri"])
+    return trackURIs
 
 
-def userPlaylistsTrackIds(sp):
+def userPlaylistsTrackURIs(sp):
     """
     Get all the track ids in the user's 10 recent playlists
     return: all the track ids from the user's 10 most recent playlists
@@ -77,7 +77,7 @@ def userPlaylistsTrackIds(sp):
     #go into items, then iterate through the list of dictionary. then go into each dictinary and get the id.
     trackURIs = []
     for playlist in playlists:
-        trackURIs.append(getPlaylistTrackIDs(sp, playlist['id']))
+        trackURIs.append(getPlaylistTrackURIs(sp, playlist['id']))
     final = []
     for uri in trackURIs:
         for playlistID in uri:

@@ -70,6 +70,14 @@ def getUserID(sp):
     userID = sp.current_user()["id"]
     return userID
 
+def deleteTrack(sp, recommendationPlaylistID, uri):
+    sp.playlist_remove_specific_occurrences_of_items(recommendationPlaylistID, uri)
+    return "sucess!"
+
+def playlistLength(sp, recommendationPlaylistID):
+    items = sp.playlist(playlist_id = recommendationPlaylistID)['tracks']['items']
+    return str(len(items))
+
 
 #making the playlist!!!
 
