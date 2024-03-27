@@ -6,17 +6,17 @@ from spotipy.oauth2 import SpotifyOAuth
 import recplay
 
 
-def getTrackID(track):
+def getTrackURI(track):
     """
-    Extracts the track ids
+    Extracts the track uris
     return: the 
     """
-    topTrackIDs = [trk['id'] for trk in track]
-    return topTrackIDs
+    topTrackURIs = [trk['uri'] for trk in track]
+    return topTrackURIs
 
 def artistTopTrackURIs(sp):
     """
-    Gathers the top tracks from the user's top 15 artists and returns a list of all the song ids
+    Gathers the top tracks from the user's top 15 artists and returns a list of all the song uris
     return: the top 15 artists' top songs
     """
     top15Artists = recplay.getTop15Artists(sp)
@@ -25,18 +25,16 @@ def artistTopTrackURIs(sp):
     tracks = [] #holds a list of dictionaries of tracks
     for artistID in artistIDs:
         tracks.append(sp.artist_top_tracks(artist_id=artistID, country='US'))
-    trackIDs = []
+    trackURIs = []
     for track in tracks: #goes into each dictionary
         tr = track['tracks']
-        trackIDs.append(getTrackID(tr)) #adds list of ids into a list
+        trackURIs.append(getTrackURI(tr)) #adds list of ids into a list
     final = []
-    for ids in trackIDs:
-        for id in ids:
-            final.append(id)
+    for uris in trackURIs:
+        for uri in uris:
+            final.append(uri)
 
     return final #returns a list of the top artists top tracks
-
-
 
 def recentlyPlayedTrackURIs(sp):
     """
@@ -48,9 +46,6 @@ def recentlyPlayedTrackURIs(sp):
     for item in items:
         recentlyPlayTrackURIs.append(item['track']['uri'])
     return recentlyPlayTrackURIs
-
-
-
 
 def getPlaylistTrackURIs(sp, playlistID):
     """
@@ -86,20 +81,40 @@ def userPlaylistsTrackURIs(sp):
     return final 
 
 
-# def filter(sp, recommendationPlaylist):
-#     """
-#     Will filter out songs from the generated recommendation playlist. It removes songs that are in the user's
-#     10 most recent playlists and top tracks from their top 15 artists
-#     param recommendationPlaylist: the newly made recommendation playlist generated through recplay
-#     return: modifies the recommendation playlist so it contains never heard before new songs
-#     """
-#     recPlaylistId = recplay.getRecPlaylistID(sp)
-#     recTrackIds = getPlaylistTrackIDs(sp, recPlaylistId)
+def filterHelper(sp, recPlaylistId, recTrackURIs, playlistTrackURIs, recentTrackURIs, artistTrackURIs):
+    """
+    Will filter out songs from the generated recommendation playlist. It removes songs that are in the user's
+    10 most recent playlists and top tracks from their top 15 artists
+    param recommendationPlaylist: the newly made recommendation playlist generated through recplay
+    return: modifies the recommendation playlist so it contains never heard before new songs
+    """
 
-#     playlistTrackIds = userPlaylistsTrackIds(sp)
-#     recentTrackIds = recentlyPlayedTrackIDs(sp)
-#     artistTrackIds = artistTopTrackIDs(sp)
+    for uri in recTrackURIs:
+        if (uri in playlistTrackURIs) or (uri in recentTrackURIs) or (uri in artistTrackURIs):
+            recplay.deleteTrack(sp, recPlaylistId, uri)
+    
+    if (recplay.playlistLength(sp, recPlaylistId) < 5):
+        difference = 5 - recplay.playlistLength(sp, recPlaylistId)
+        newTracks = recplay.getRecommendations(sp, difference)
+        sp.playlist_add_items(recPlaylistId, newTracks)
+        filterHelper(sp, recPlaylistId, recTrackURIs, playlistTrackURIs, recentTrackURIs, artistTrackURIs)
+    
+    return sp.playlist(recPlaylistId)
 
-#     for id in recTrackIds:
-#         if (id in playlistTrackIds) or (id in recentTrackIds) or (id in artistTrackIds):
-#             recplay.deleteTrack(sp, recPlaylistId, )
+def filter(sp, recommendationPlaylist):
+    """
+    Will filter out songs from the generated recommendation playlist. It removes songs that are in the user's
+    10 most recent playlists and top tracks from their top 15 artists
+    param recommendationPlaylist: the newly made recommendation playlist generated through recplay
+    return: modifies the recommendation playlist so it contains never heard before new songs
+    """
+    recPlaylistId = recplay.getRecPlaylistID(sp)
+    recTrackURIs = getPlaylistTrackURIs(sp, recPlaylistId)
+
+    return recTrackURIs
+
+    # playlistTrackURIs = userPlaylistsTrackURIs(sp)
+    # recentTrackURIs = recentlyPlayedTrackURIs(sp)
+    # artistTrackURIs = artistTopTrackURIs(sp)
+
+    # filterHelper(sp, recPlaylistId, recTrackURIs, playlistTrackURIs, recentTrackURIs, artistTrackURIs)
