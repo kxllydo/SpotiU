@@ -43,11 +43,20 @@ def getTop3Genres(top15Artists):
     return finalGenres
 
 def getRecommendations(sp, num):
+    """
+    Returns a list of track uris of songs that spotify generated
+    param num: The number of songs you want the request to randomly generate
+    """
     top15Artists = getTop15Artists(sp)
     artistSeed = getTop2ArtistIDs(top15Artists)
     genreSeed = getTop3Genres(top15Artists)
+    recommendations = sp.recommendations(seed_artists=artistSeed, seed_genres=genreSeed, limit=num, country='US')['tracks']
+    URIs = []
+    for track in recommendations:
+        URIs.append(track['uri'])
 
-    return sp.recommendations(seed_artists=artistSeed, seed_genres=genreSeed, limit=num, country='US')
+    return URIs
+
 
 def getSongs(sp):
     final = []
@@ -57,13 +66,6 @@ def getSongs(sp):
     
     return final
 
-def getURI(sp):
-    final = []
-    URI = getRecommendations(sp, 5)["tracks"]
-    for song in URI:
-        final.append(song["uri"])
-
-    return final    
 
 
 def getUserID(sp):
@@ -71,7 +73,7 @@ def getUserID(sp):
     return userID
 
 def deleteTrack(sp, recommendationPlaylistID, uri):
-    sp.playlist_remove_all_occurrences_of_items(recommendationPlaylistID, uri)
+    sp.playlist_remove_all_occurrences_of_items(recommendationPlaylistID, [uri])
     return "sucess!"
 
 def playlistLength(sp, recommendationPlaylistID):
@@ -95,7 +97,7 @@ def getRecPlaylistID(sp):
 
 def fillRecPlaylist(sp):
     playlistID = getRecPlaylistID(sp)
-    songURIList = getURI(sp)
+    songURIList = getRecommendations(sp)
     filledPlaylist = sp.playlist_add_items(playlist_id=playlistID, items=songURIList, position=None)
     return filledPlaylist
 

@@ -81,13 +81,14 @@ def userPlaylistsTrackURIs(sp):
     return final 
 
 
-def filterHelper(sp, recPlaylistId, recTrackURIs, playlistTrackURIs, recentTrackURIs, artistTrackURIs):
+def filterHelper(sp, recPlaylistId, playlistTrackURIs, recentTrackURIs, artistTrackURIs):
     """
     Will filter out songs from the generated recommendation playlist. It removes songs that are in the user's
     10 most recent playlists and top tracks from their top 15 artists
     param recommendationPlaylist: the newly made recommendation playlist generated through recplay
     return: modifies the recommendation playlist so it contains never heard before new songs
     """
+    recTrackURIs = getPlaylistTrackURIs(sp, recPlaylistId)
 
     for uri in recTrackURIs:
         if (uri in playlistTrackURIs) or (uri in recentTrackURIs) or (uri in artistTrackURIs):
@@ -109,12 +110,10 @@ def filter(sp, recommendationPlaylist):
     return: modifies the recommendation playlist so it contains never heard before new songs
     """
     recPlaylistId = recplay.getRecPlaylistID(sp)
-    recTrackURIs = getPlaylistTrackURIs(sp, recPlaylistId)
 
-    return recTrackURIs
+    playlistTrackURIs = userPlaylistsTrackURIs(sp)
+    recentTrackURIs = recentlyPlayedTrackURIs(sp)
+    artistTrackURIs = artistTopTrackURIs(sp)
 
-    # playlistTrackURIs = userPlaylistsTrackURIs(sp)
-    # recentTrackURIs = recentlyPlayedTrackURIs(sp)
-    # artistTrackURIs = artistTopTrackURIs(sp)
-
-    # filterHelper(sp, recPlaylistId, recTrackURIs, playlistTrackURIs, recentTrackURIs, artistTrackURIs)
+    hi = filterHelper(sp, recPlaylistId, playlistTrackURIs, recentTrackURIs, artistTrackURIs)
+    return hi
