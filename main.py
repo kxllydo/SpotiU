@@ -33,21 +33,10 @@ def home():
         return redirect('/')
     
     sp = spotipy.Spotify(auth=token_info['access_token'])
-   # recommendations = recplay.getSongs(sp) < this returns ONLY the song names from the recommended
-   # recommendations = recplay.getSongs(sp) # < this returns the entire dictionary info about the recommended songs
     createRecommendationPlaylist = recplay.makePlaylist(sp)
-    filledPlaylist = recplay.fillRecPlaylist(sp)
-    #recTrackURIs = playfilter.getPlaylistTrackURIs(sp, recplay.getRecPlaylistID(sp))
-
-    #playfilter.filter(sp, recplay.getRecPlaylistID(sp))
-    #bruh = recplay.getRecommendations(sp, 5)\
-    id = recplay.getRecPlaylistID(sp)
-
+    filledPlaylist = recplay.makeRecommendationPlaylist(sp)
     hi = playfilter.filter(sp)
-    return hi #playfilter.filter(sp, recplay.getRecPlaylistID(sp))
-    #id = recplay.getRecPlaylistID(filledPlaylist)
-    #ID = recplay.getUserProfile(sp)
-    #return (createRecommendationPlaylist, filledPlaylist)
+    return hi 
 
 def get_token():
     token_info = session.get(TOKEN_INFO, None)

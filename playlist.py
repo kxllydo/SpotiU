@@ -67,21 +67,16 @@ def getSongs(sp):
     return final
 
 
-
 def getUserID(sp):
     userID = sp.current_user()["id"]
     return userID
 
 def deleteTrack(sp, recommendationPlaylistID, uri):
     sp.playlist_remove_all_occurrences_of_items(recommendationPlaylistID, [uri])
-    return "sucess!"
 
 def playlistLength(sp, recommendationPlaylistID):
     items = sp.playlist(playlist_id = recommendationPlaylistID)['tracks']['items']
     return len(items)
-
-
-#making the playlist!!!
 
 def makePlaylist(sp):
     getID = getUserID(sp)
@@ -89,15 +84,13 @@ def makePlaylist(sp):
     return playlist
 
 def getRecPlaylistID(sp):
-    playlistID1 = sp.current_user_playlists(limit=1, offset=0)
-    playlistID2 = playlistID1["items"][0]['id']
-    #filledPlaylist = sp.playlist_add_items(playlist_id=playlistID, items=getSongs(sp), position=None)
-    return playlistID2 #filledPlaylist
+    playlists = sp.current_user_playlists(limit=1, offset=0)
+    playlistID = playlists["items"][0]['id']
+    return playlistID
 
-
-def fillRecPlaylist(sp):
+def makeRecommendationPlaylist(sp):
     playlistID = getRecPlaylistID(sp)
-    songURIList = getRecommendations(sp, 5)
+    songURIList = getRecommendations(sp, 10)
     filledPlaylist = sp.playlist_add_items(playlist_id=playlistID, items=songURIList, position=None)
     return filledPlaylist
 

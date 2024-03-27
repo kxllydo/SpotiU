@@ -3,16 +3,9 @@ from requests import post, get
 import spotipy
 import time
 from spotipy.oauth2 import SpotifyOAuth
-import recplay
+import recplaylist
 
 
-def getTrackURI(track):
-    """
-    Extracts the track uris
-    return: the 
-    """
-    topTrackURIs = [trk['uri'] for trk in track]
-    return topTrackURIs
 
 def getTopTrackURIs(sp, artistID, country="US", num=10):
     topTracks = sp.artist_top_tracks(artist_id=artistID, country=country)['tracks']
@@ -31,7 +24,7 @@ def topArtistTopTrackURIs(sp):
     return: the top 15 artists' top songs
     """
     top15Artists = sp.current_user_top_artists(limit=15)['items']
-    artistIDs = recplay.getArtistIDs(top15Artists)  #move this function to this file
+    artistIDs = recplaylist.getArtistIDs(top15Artists)  #move this function to this file
 
     tracks = [] #holds a list of dictionaries of tracks
     for artistID in artistIDs:
@@ -125,11 +118,11 @@ def filterHelper(sp, recPlaylistId, playlistTrackURIs, recentTrackURIs, artistTr
 
     for uri in recTrackURIs:
         if (uri in playlistTrackURIs) or (uri in recentTrackURIs) or (uri in artistTrackURIs) or (uri in recommendedArtistTrackURIs):
-            recplay.deleteTrack(sp, recPlaylistId, uri)
+            recplaylist.deleteTrack(sp, recPlaylistId, uri)
     
-    if (recplay.playlistLength(sp, recPlaylistId) < 5):
-        difference = 5 - recplay.playlistLength(sp, recPlaylistId)
-        newTracks = recplay.getRecommendations(sp, difference)
+    if (recplaylist.playlistLength(sp, recPlaylistId) < 10):
+        difference = 10 - recplaylist.playlistLength(sp, recPlaylistId)
+        newTracks = recplaylist.getRecommendations(sp, difference)
         sp.playlist_add_items(recPlaylistId, newTracks)
         filterHelper(sp, recPlaylistId, playlistTrackURIs, recentTrackURIs, artistTrackURIs, recommendedArtistTrackURIs)
     
@@ -140,7 +133,7 @@ def filter(sp):
     param recommendationPlaylist: the newly made recommendation playlist generated through recplay
     return: modifies the recommendation playlist so it contains never heard before new songs
     """
-    recPlaylistId = recplay.getRecPlaylistID(sp)
+    recPlaylistId = recplaylist.getRecPlaylistID(sp)
 
     playlistTrackURIs = userPlaylistsTrackURIs(sp)
     recentTrackURIs = recentlyPlayedTrackURIs(sp)
