@@ -14,9 +14,8 @@ app.secret_key = 'yaaaaassss!!!!12345'
 TOKEN_INFO = 'token_info'
 
 load_dotenv()
-
-SPOTIFY_CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
-SPOTIFY_CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET")
+SPOTIFY_CLIENT_ID = os.getenv("CLIENT_ID")
+SPOTIFY_CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 
 @app.route('/')
 def login():
@@ -40,7 +39,6 @@ def home():
         return redirect('/')
     
     sp = spotipy.Spotify(auth=token_info['access_token'])
-    bruh = filter.recommendedArtistTopTrackURIs(sp, '1pSq0tMtVlsHWJIR62Hokc')
     createRecommendationPlaylist = playlist.makePlaylist(sp)
     filledPlaylist = playlist.makeRecommendationPlaylist(sp)
     hi = filter.filter(sp)
