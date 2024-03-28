@@ -34,6 +34,7 @@ def home():
         return redirect('/')
     
     sp = spotipy.Spotify(auth=token_info['access_token'])
+    bruh = filter.recommendedArtistTopTrackURIs(sp, '1pSq0tMtVlsHWJIR62Hokc')
     createRecommendationPlaylist = playlist.makePlaylist(sp)
     filledPlaylist = playlist.makeRecommendationPlaylist(sp)
     hi = filter.filter(sp)
@@ -57,8 +58,8 @@ def get_token():
 
 def create_spotify_oauth():
     return SpotifyOAuth(
-        client_id = "bbf6ac9a6686421cab10717891f179cf",
-        client_secret = "e7ee05789cbd497cb1f571647c411453",
+        client_id = "c584a76f0e49433ab86e6b25fcc3aa2b",
+        client_secret = "d40de1a1f2a14c5d845543c6680ed642",
         redirect_uri = url_for('redirect_page', _external= True),
         #SCOPE COULD BE ANYTHING WE ARE ADDING!!!!
         scope = 'user-library-read user-top-read playlist-modify-public playlist-modify-private user-read-private user-read-email playlist-read-private user-read-recently-played'
