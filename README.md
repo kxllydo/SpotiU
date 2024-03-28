@@ -6,18 +6,18 @@ Depending on what you are making, it can be a good idea to include screenshots o
 
 ## Installation
 1. Clone
-'''
+```
 git clone https://github.com/kxllydo/SpotiU.git
-'''
+```
 2. Navigate to directory
     cd SpotiU
 3. Install Python
 4. Install virtual environment if not already installed
 5. Install dependencies
-'''
+```
 pip install Flask
 pip install spotipy
-'''
+```
 6. Run the application
 
 ## Usage
