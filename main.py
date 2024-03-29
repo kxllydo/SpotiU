@@ -24,6 +24,7 @@ def login():
 
 @app.route('/redirect')
 def redirect_page():
+    print('error?')
     session.clear()
     code = request.args.get('code')
     token_info = create_spotify_oauth().get_access_token(code)
@@ -59,14 +60,14 @@ def get_token():
 
     return token_info
 
-
 def create_spotify_oauth():
-    return SpotifyOAuth(
-        client_id = SPOTIFY_CLIENT_ID,
-        client_secret = SPOTIFY_CLIENT_SECRET,
-        redirect_uri = url_for('redirect_page', _external= True),
-        #SCOPE COULD BE ANYTHING WE ARE ADDING!!!!
-        scope = 'user-library-read user-top-read playlist-modify-public playlist-modify-private user-read-private user-read-email playlist-read-private user-read-recently-played'
-        )
+    sp_oauth = SpotifyOAuth(
+        client_id=SPOTIFY_CLIENT_ID,
+        client_secret=SPOTIFY_CLIENT_SECRET,
+        redirect_uri=url_for('redirect_page', _external=True),
+        scope='user-library-read user-top-read playlist-modify-public playlist-modify-private user-read-private user-read-email playlist-read-private user-read-recently-played'
+    )
+    return sp_oauth
+
 
 app.run(debug = True)
