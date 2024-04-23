@@ -70,4 +70,5 @@ def create_spotify_oauth():
     return sp_oauth
 
 
-app.run(debug = True)
+if __name__ == "__main__":
+    app.run(debug=True)

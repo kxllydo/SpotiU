@@ -75,8 +75,7 @@ def recommendedArtistTopTrackURIs(sp, recPlayistID):
 def recentlyPlayedTrackURIs(sp):
     """
     Gets the 50 songs the user recently played
-
-    return: 50 songs the user recently played
+    @return: 50 songs the user recently played
     """
     items = sp.current_user_recently_played()['items'] #list of all the tracks
     recentlyPlayTrackURIs = []
@@ -87,9 +86,8 @@ def recentlyPlayedTrackURIs(sp):
 def getPlaylistTrackURIs(sp, playlistID):
     """
     Given a playlist, extract all the tracks from the playlist and return the URIs
-
     @pararm playlistID: the playlist id that we use to extract all the track ids from
-    return: list of track ids from one single playlist
+    @return: list of track ids from one single playlist
     """
     items = sp.playlist_items(playlist_id=playlistID)['items']
     tracks =[item["track"] for item in items] # a list of all the tracks from 10 playlists
@@ -103,8 +101,7 @@ def getPlaylistTrackURIs(sp, playlistID):
 def userPlaylistsTrackURIs(sp):
     """
     Get all the track ids in the user's 10 recent playlists
-
-    return: all the track ids from the user's 10 most recent playlists
+    @return: all the track ids from the user's 10 most recent playlists
     """
     playlists = sp.current_user_playlists(limit=10, offset=0)['items']  #gets the user's 10 recent playlists
 
@@ -128,7 +125,7 @@ def filterHelper(sp, recPlaylistId, playlistTrackURIs, recentTrackURIs, artistTr
     and the playlist has 10 songs
 
     @param recPlaylistId: recommnedation playlist id
-    @param playlistTrackURIs: list of uris of songs the user has in their recent playlists
+    @param playlistTrackURIs list of uris of songs the user has in their recent playlists
     @param recentTrackURIs: list of uris of songs that the user recently listened to
     @param artistTrackURIs: list of uris of user's top artists' top tracks
     """
@@ -145,7 +142,7 @@ def filterHelper(sp, recPlaylistId, playlistTrackURIs, recentTrackURIs, artistTr
         newTracks = playlist.getRecommendations(sp, difference)
         sp.playlist_add_items(recPlaylistId, newTracks)
         filterHelper(sp, recPlaylistId, playlistTrackURIs, recentTrackURIs, artistTrackURIs)
-            
+ 
 def filter(sp):
     """
     Will filter out songs from the generated recommendation playlist to refine the playlist  
