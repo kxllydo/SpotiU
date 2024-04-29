@@ -42,13 +42,7 @@ def home():
     # createRecommendationPlaylist = playlist.makePlaylist(sp)
     # filledPlaylist = playlist.makeRecommendationPlaylist(sp)
     # hi = filter.filter(sp)
-
-    id = "5pwIi0zU1lpohrntzYqbX3"
-    playlistStuff = sp.playlist_items(id)
-    return jsonify(playlistStuff)
-
-
-
+    
     return jsonify(token_info) #render_template('home.html') 
 
 def get_token():
