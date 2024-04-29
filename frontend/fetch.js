@@ -1,7 +1,4 @@
 const getTokenAndLog = async () => {
-    const id = "c584a76f0e49433ab86e6b25fcc3aa2b";
-    const key = "8bf8ac459e444362b38b6af8f1563a87";
-
     try {
         const result = await fetch('https://accounts.spotify.com/api/token', {
             method: 'POST',
