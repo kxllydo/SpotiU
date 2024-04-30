@@ -2,11 +2,13 @@ from spotipy.oauth2 import SpotifyOAuth, SpotifyClientCredentials
 import spotipy
 import time
 from flask import Flask, request, url_for, session, redirect, render_template, jsonify, request
+from flask_cors import CORS
 from dotenv import load_dotenv
 import os
 import json
 
 test = Flask(__name__)
+CORS(test)
 
 load_dotenv()
 SPOTIFY_CLIENT_ID = os.getenv("CLIENT_ID")
@@ -42,8 +44,11 @@ def home():
     # createRecommendationPlaylist = playlist.makePlaylist(sp)
     # filledPlaylist = playlist.makeRecommendationPlaylist(sp)
     # hi = filter.filter(sp)
-    
-    return jsonify(token_info) #render_template('home.html') 
+
+    playlists = sp.current_user_playlists(limit=1, offset=0)
+    playlistID = playlists["items"][0]['id']
+    return token_info
+    # return jsonify(token_info) #render_template('home.html') 
 
 def get_token():
     token_info = session.get(TOKEN_INFO, None)
