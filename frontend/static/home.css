@@ -1,0 +1,16 @@
+body{
+    display:grid;
+    place-items: center;
+
+
+}
+
+.track{
+    text-align:center;
+    color: pink;
+}
+
+p{
+    color: pink;
+}
+
