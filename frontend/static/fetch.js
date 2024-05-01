@@ -53,16 +53,21 @@ const displaySongs= async(token, id) => {
         // const imgUrl = imgUrlList[0].url;
         const div = document.createElement('div');
         div.classList.add('track');
-        document.body.appendChild(div);
+
+        const container = document.getElementsByClassName('flex-container')[0]
+        container.appendChild(div);
         nameAndImg(songName, imgUrl, div);
     });
 }
 
 function nameAndImg (song, url, div){
+    const img = document.createElement('img');
+    img.src = url;
+    div.appendChild(img);
+
     const p = document.createElement('p');
     p.textContent = song;
     div.appendChild(p)
-
     // const img = document.createElement('img');
 }
 // getToken();
