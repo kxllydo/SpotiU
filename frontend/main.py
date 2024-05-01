@@ -48,7 +48,7 @@ def home():
 
     playlists = sp.current_user_playlists(limit=1, offset=0)
     playlistID = playlists["items"][0]['id']
-    return render_template('home.html') 
+    return render_template('home.html'), playlistID
 
 
 def get_token():
