@@ -40,11 +40,11 @@ def home():
         return redirect('/')
     
     sp = spotipy.Spotify(auth=token_info['access_token'])
-    # createRecommendationPlaylist = playlist.makePlaylist(sp)
-    # filledPlaylist = playlist.makeRecommendationPlaylist(sp)
-    # hi = filter.filter(sp)
-
-    return token_info # render_template('home.html') 
+    createRecommendationPlaylist = playlist.makePlaylist(sp)
+    filledPlaylist = playlist.makeRecommendationPlaylist(sp)
+    filter.filter(sp)
+    id = playlist.getRecPlaylistID(sp)
+    return render_template('home.html'), id
 
 def get_token():
     token_info = session.get(TOKEN_INFO, None)

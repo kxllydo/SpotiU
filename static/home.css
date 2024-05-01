@@ -16,8 +16,8 @@ body{
 .flex-container > .track{
     color: pink;
     background-color: black;
-    margin-left:37%;
-    margin-right:37%;
+    margin-left:35%;
+    margin-right:35%;
     padding: 5px;
     border-radius: 10px;
 }
