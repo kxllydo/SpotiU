@@ -1,3 +1,5 @@
 .env
 hi.md
 venv/
+frontend/.env
+frontend/static/config.js
