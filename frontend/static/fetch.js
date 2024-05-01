@@ -1,9 +1,6 @@
 const getToken = async () => {
-    const fs = require('fs').promises;
-    const info = await fs.readFile('info.json', 'utf8');
-    const json = JSON.parse(info);
-    const id = json.CLIENT_ID;
-    const secret = json.CLIENT_SECRET;
+    id = config.id;
+    secret = config.secret;
     const base64Encoded = btoa(id + ':' + secret);
 
     const result = await fetch('https://accounts.spotify.com/api/token', {

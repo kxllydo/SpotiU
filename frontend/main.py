@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 import os
 import json
 
+
 test = Flask(__name__)
 CORS(test)
 
@@ -47,8 +48,8 @@ def home():
 
     playlists = sp.current_user_playlists(limit=1, offset=0)
     playlistID = playlists["items"][0]['id']
-    return token_info
-    # return jsonify(token_info) #render_template('home.html') 
+    return render_template('home.html') 
+
 
 def get_token():
     token_info = session.get(TOKEN_INFO, None)
@@ -75,5 +76,5 @@ def create_spotify_oauth():
 
 
 if __name__ == "__main__":
-    test.run()
+    test.run(debug = True)
 
