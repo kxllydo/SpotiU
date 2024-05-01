@@ -37,12 +37,35 @@ const getSongs = async (token, id) => {
         container.appendChild(pElement); // Append <p> element to song container
     });
 
-    // for (let i = 0; i < items.items.length; i++){
-    //     console.log(items.items[i].track.name)
-    // }
 }
 
+const displaySongs= async(token, id) => {
+    const result = await fetch(`https://api.spotify.com/v1/playlists/${id}/tracks`, {
+        method: 'GET',
+        headers: {'Authorization': 'Bearer ' + token}
+    });
+
+    const info = await result.json();
+    info.items.forEach(item => {
+        const songName = item.track.name;
+        const imgUrl = item.track.album.images[2].url
+        console.log(imgUrl);
+        // const imgUrl = imgUrlList[0].url;
+        const div = document.createElement('div');
+        div.classList.add('track');
+        document.body.appendChild(div);
+        nameAndImg(songName, imgUrl, div);
+    });
+}
+
+function nameAndImg (song, url, div){
+    const p = document.createElement('p');
+    p.textContent = song;
+    div.appendChild(p)
+
+    // const img = document.createElement('img');
+}
 // getToken();
 
 getToken()
-  .then(data => getSongs(data, "2qjr8xuEYrLoJLgDe6iHbd"));
+  .then(data => displaySongs(data, "2qjr8xuEYrLoJLgDe6iHbd"));
