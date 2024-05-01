@@ -10,11 +10,8 @@ git clone https://github.com/kxllydo/SpotiU.git
 ```
 cd SpotiU
 ```
-3. Install Python
-4. Install virtual environment if not already installed
-5. Install dependencies
+3. Install dependencies
 ```
-pip install Flask
-pip install spotipy
+pip install -r requirements.txt
 ```
 6. Run the application
