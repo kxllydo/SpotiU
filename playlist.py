@@ -150,7 +150,7 @@ def makePlaylist(sp):
     return: the new playlist created
     """
     getID = getUserID(sp)
-    playlist = sp.user_playlist_create(user=getID, name="Recommendations", public=False, collaborative=False, description="A new recommendation playlisyt for you!")
+    playlist = sp.user_playlist_create(user=getID, name="Recommendations", public=False, collaborative=False, description="A new recommendation playlist for you!")
     return playlist
 
 def getRecPlaylistID(sp):
