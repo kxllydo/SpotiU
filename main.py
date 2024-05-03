@@ -49,7 +49,7 @@ def home():
     token_info = get_token()
     sp = spotipy.Spotify(auth=token_info['access_token'])
     id = playlist.getRecPlaylistID(sp)
-    return render_template('home.html'), id
+    return render_template('home.html', id=id), id
 
 def get_token():
     token_info = session.get(TOKEN_INFO, None)
