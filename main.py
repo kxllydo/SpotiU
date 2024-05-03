@@ -29,22 +29,27 @@ def redirect_page():
     code = request.args.get('code')
     token_info = create_spotify_oauth().get_access_token(code)
     session[TOKEN_INFO] = token_info
-    return redirect(url_for('home', external = True))
+    return redirect(url_for('run', external = True))
 
-@app.route('/home')
-def home():
+@app.route('/run')
+def run():
     try:
         token_info = get_token()
+        sp = spotipy.Spotify(auth=token_info['access_token'])
+        createRecommendationPlaylist = playlist.makePlaylist(sp)
+        filledPlaylist = playlist.makeRecommendationPlaylist(sp)
+        filter.filter(sp)
+        return redirect(url_for('home', external = True))
     except:
         print("User not logged in")
         return redirect('/')
-    
+
+@app.route('/home')
+def home():  
+    token_info = get_token()
     sp = spotipy.Spotify(auth=token_info['access_token'])
-    createRecommendationPlaylist = playlist.makePlaylist(sp)
-    filledPlaylist = playlist.makeRecommendationPlaylist(sp)
-    filter.filter(sp)
     id = playlist.getRecPlaylistID(sp)
-    return render_template('home.html'), id
+    return render_template('home.html', id=id), id
 
 def get_token():
     token_info = session.get(TOKEN_INFO, None)
