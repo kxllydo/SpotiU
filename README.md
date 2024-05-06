@@ -16,4 +16,9 @@ cd SpotiU
 ```
 pip install -r requirements.txt
 ```
+4. Get your own client id and secret from Spotify's API
+```
+https://developer.spotify.com/
+```
+5. Create .env file, assigning your client id and secret to variables
 6. Run the application
